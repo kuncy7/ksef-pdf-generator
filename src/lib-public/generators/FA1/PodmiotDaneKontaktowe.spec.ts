@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe';
+import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe.js';
 import { FP } from '../../types/fa1.types';
 
 vi.mock('../../../shared/PDF-functions', () => ({

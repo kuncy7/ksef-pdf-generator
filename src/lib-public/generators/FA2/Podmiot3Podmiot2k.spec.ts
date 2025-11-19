@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { generateDaneIdentyfikacyjneTPodmiot3Dto } from './Podmiot3Podmiot2k';
+import { generateDaneIdentyfikacyjneTPodmiot3Dto } from './Podmiot3Podmiot2k.js';
 import {Content} from "pdfmake/interfaces";
 
 vi.mock('../../../shared/PDF-functions', () => ({

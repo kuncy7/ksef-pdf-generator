@@ -9,12 +9,12 @@ import {
   getTable,
   getTStawkaPodatku,
   getValue,
-} from '../../../shared/PDF-functions';
-import { HeaderDefine } from '../../../shared/types/pdf-types';
-import { TRodzajFaktury } from '../../../shared/consts/const';
+} from '../../../shared/PDF-functions.js';
+import { HeaderDefine } from '../../../shared/types/pdf-types.js';
+import { TRodzajFaktury } from '../../../shared/consts/const.js';
 import { Fa, FP } from '../../types/fa3.types';
-import FormatTyp, { Position } from '../../../shared/enums/common.enum';
-import { addMarza } from '../common/Wiersze';
+import FormatTyp, { Position } from '../../../shared/enums/common.enum.js';
+import { addMarza } from '../common/Wiersze.js';
 
 export function generateWiersze(faVat: Fa): Content {
   const table: Content[] = [];

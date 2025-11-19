@@ -8,12 +8,16 @@ import {
   getTable,
   hasValue,
   verticalSpacing,
-} from '../../../shared/PDF-functions';
-import FormatTyp from '../../../shared/enums/common.enum';
+} from '../../../shared/PDF-functions.js';
+import {
+  createLabelTextArray,
+  createSection,
+} from '../../../shared/PDF-functions.js';
+import FormatTyp from '../../../shared/enums/common.enum.js';
 import { Podmiot2, Podmiot2K } from '../../types/fa3.types';
-import { generateAdres } from './Adres';
-import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe';
-import { generateDaneIdentyfikacyjneTPodmiot2Dto } from './PodmiotDaneIdentyfikacyjneTPodmiot2Dto';
+import { generateAdres } from './Adres.js';
+import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe.js';
+import { generateDaneIdentyfikacyjneTPodmiot2Dto } from './PodmiotDaneIdentyfikacyjneTPodmiot2Dto.js';
 
 export function generatePodmiot2Podmiot2K(podmiot2: Podmiot2, podmiot2K: Podmiot2K): Content[] {
   const result: Content[] = [];

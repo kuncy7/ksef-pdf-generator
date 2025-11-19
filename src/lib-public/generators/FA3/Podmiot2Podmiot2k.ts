@@ -7,13 +7,13 @@ import {
   generateLine,
   getTable,
   verticalSpacing,
-} from '../../../shared/PDF-functions';
-import FormatTyp from '../../../shared/enums/common.enum';
+} from '../../../shared/PDF-functions.js';
+import FormatTyp from '../../../shared/enums/common.enum.js';
 import { Podmiot2, Podmiot2K } from '../../types/fa3.types';
-import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe';
-import { generateCorrectedContent } from '../FA2/Podmiot2Podmiot2k';
-import { generateAdres } from '../FA2/Adres';
-import { generateDaneIdentyfikacyjneTPodmiot2Dto } from '../FA2/PodmiotDaneIdentyfikacyjneTPodmiot2Dto';
+import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe.js';
+import { generateCorrectedContent } from '../FA2/Podmiot2Podmiot2k.js';
+import { generateAdres } from '../FA2/Adres.js';
+import { generateDaneIdentyfikacyjneTPodmiot2Dto } from '../FA2/PodmiotDaneIdentyfikacyjneTPodmiot2Dto.js';
 
 export function generatePodmiot2Podmiot2K(podmiot2: Podmiot2, podmiot2K: Podmiot2K): Content[] {
   const result: Content[] = [];

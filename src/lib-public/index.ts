@@ -1,4 +1,4 @@
-import { generateInvoice } from './generate-invoice';
-import { generatePDFUPO } from './UPO-generator';
+import { generateInvoice } from './generate-invoice.js';
+import { generatePDFUPO } from './UPO-generator.js';
 
 export { generateInvoice, generatePDFUPO };
