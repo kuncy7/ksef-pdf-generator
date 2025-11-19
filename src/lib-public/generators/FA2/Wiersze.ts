@@ -8,13 +8,13 @@ import {
   getTable,
   getTStawkaPodatku,
   getValue,
-} from '../../../shared/PDF-functions';
-import { HeaderDefine } from '../../../shared/types/pdf-types';
-import { TRodzajFaktury } from '../../../shared/consts/const';
+} from '../../../shared/PDF-functions.js';
+import { HeaderDefine } from '../../../shared/types/pdf-types.js';
+import { TRodzajFaktury } from '../../../shared/consts/const.js';
 import { Fa, FP } from '../../types/fa2.types';
-import FormatTyp, { Position } from '../../../shared/enums/common.enum';
-import { TableWithFields } from '../../types/fa1-additional-types';
-import { addMarza } from '../common/Wiersze';
+import FormatTyp, { Position } from '../../../shared/enums/common.enum.js';
+import { TableWithFields } from '../../types/fa1-additional-types.js';
+import { addMarza } from '../common/Wiersze.js';
 
 export function generateWiersze(faVat: Fa): Content {
   const table: Content[] = [];

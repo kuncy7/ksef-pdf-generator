@@ -16,13 +16,13 @@ import {
   TStawkaPodatku_FA1,
   TStawkaPodatku_FA2,
   TStawkaPodatku_FA3,
-} from './consts/const';
-import {formatDateTime, formatTime, getFormaPlatnosciString} from './generators/common/functions';
+} from './consts/const.js';
+import {formatDateTime, formatTime, getFormaPlatnosciString} from './generators/common/functions.js';
 import { HeaderDefine, PdfFP, PdfOptionField } from './types/pdf-types';
 import { FP } from '../lib-public/types/fa3.types';
 import { DifferentValues, FilteredKeysOfValues, TypesOfValues } from './types/universal.types';
 import { CreateLabelTextData } from './types/additional-data.types';
-import FormatTyp, { Answer, Position } from './enums/common.enum';
+import FormatTyp, { Answer, Position } from './enums/common.enum.js';
 
 export function formatText(
   value: number | string | undefined | null,
