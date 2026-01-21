@@ -16,7 +16,6 @@ import {
   createSubHeader,
   formatText,
   getContentTable,
-  getTable,
 } from '../../../shared/PDF-functions.js';
 
 describe(generateDodatkoweInformacje.name, () => {

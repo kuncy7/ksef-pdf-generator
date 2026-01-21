@@ -46,7 +46,7 @@ export function generateStopka(
     createSection(
       [
         {
-          stack: createLabelText('Wytworzona w:', naglowek?.SystemInfo),
+          stack: createLabelText('Wytworzona w: ', naglowek?.SystemInfo),
           margin: [0, 8, 0, 0],
         },
       ],
@@ -151,9 +151,58 @@ export function generateQRCodeData(additionalData?: AdditionalDataTypes, caption
                 'Nie możesz zeskanować kodu z obrazka? Kliknij w link weryfikacyjny i przejdź do weryfikacji faktury!',
                 FormatTyp.Value
               ),
-              { stack: [formatText(additionalData.qrCode, FormatTyp.Link)], marginTop: 5 },
+              {
+                stack: [formatText(additionalData.qrCode, FormatTyp.Link)],
+                marginTop: 5,
+                link: additionalData.qrCode,
+              },
             ],
-            link: additionalData.qrCode,
+
+            margin: [10, (qrCode.fit ?? 120) / 2 - 30, 0, 0],
+            width: 'auto',
+          } as ContentStack,
+        ],
+      });
+    }
+  }
+  if (additionalData?.qrCode2 && !additionalData.nrKSeF) {
+    const qrCode: ContentQr | undefined = generateQRCode(additionalData.qrCode2);
+
+    result.push(createHeader('Zweryfikuj wystawcę faktury!'));
+    if (qrCode) {
+      qrCode.fit = 200;
+
+      result.push({
+        columns: [
+          {
+            stack: [
+              qrCode,
+
+              {
+                stack: [formatText('CERTYFIKAT', FormatTyp.Default)],
+                width: 'auto',
+                alignment: 'center',
+                marginLeft: 0,
+                // ECDSA certificate QR Code fit almost full width so we need to increase margin
+                marginRight: additionalData.qrCode2.length > 300 ? 28 : 18,
+                marginTop: 10,
+              } as ContentStack,
+            ],
+            width: 200,
+          } as ContentStack,
+          {
+            stack: [
+              formatText(
+                'Nie możesz zeskanować kodu z obrazka? Kliknij w link weryfikacyjny i przejdź do weryfikacji wystawcy!',
+                FormatTyp.Value
+              ),
+              {
+                stack: [formatText(additionalData.qrCode2.substring(0, 150) + '...', FormatTyp.Link)],
+                marginTop: 5,
+              },
+            ],
+            link: additionalData.qrCode2,
+            noWrap: false,
             margin: [10, (qrCode.fit ?? 120) / 2 - 30, 0, 0],
             width: 'auto',
           } as ContentStack,

@@ -2,7 +2,7 @@ import { TRodzajFaktury } from '../../../shared/consts/const.js';
 import { FP } from '../../types/fa1.types';
 import { getValue } from '../../../shared/PDF-functions.js';
 
-export function shouldAddMarza(
+export function addMarza(
   rodzajFaktury: string | number | undefined,
   isP_PMarzy: boolean,
   wiersz: Record<string, FP>
@@ -23,10 +23,10 @@ export function shouldAddMarza(
       } else if (isZALType && !getValue(wiersz.P_12Z) && !getValue(wiersz.P_12Z_XII)) {
         return { P_12Z: { _text: 'marża' } };
       } else {
-        return null;
+        return {};
       }
     }
   }
 
-  return null;
+  return {};
 }

@@ -1,16 +1,18 @@
 import { Content } from 'pdfmake/interfaces';
+import { TRodzajFaktury } from '../../../shared/consts/const.js';
+import FormatTyp, { Position } from '../../../shared/enums/common.enum.js';
 import {
   createHeader,
   createLabelTextArray,
   formatText,
   getContentTable,
   getTable,
+  getTStawkaPodatku,
+  getValue,
 } from '../../../shared/PDF-functions.js';
 import { HeaderDefine } from '../../../shared/types/pdf-types.js';
-import { TRodzajFaktury } from '../../../shared/consts/const.js';
-import { Zamowienie } from '../../types/fa3.types';
-import FormatTyp, { Position } from '../../../shared/enums/common.enum.js';
 import { ZamowienieKorekta } from '../../enums/invoice.enums.js';
+import { Zamowienie } from '../../types/fa3.types';
 
 export function generateZamowienie(
   orderData: Zamowienie | undefined,
@@ -27,6 +29,9 @@ export function generateZamowienie(
   const orderTable = getTable(orderData?.ZamowienieWiersz).map((el, index) => {
     if (!el.NrWierszaZam._text) {
       el.NrWierszaZam._text = (index + 1).toString();
+    }
+    if (getValue(el.P_12Z)) {
+      el.P_12Z._text = getTStawkaPodatku(getValue(el.P_12Z) as string, 3);
     }
     return el;
   });

@@ -1,4 +1,6 @@
 import { Content, ContentStack, ContentText } from 'pdfmake/interfaces';
+import { Procedura, TRodzajFaktury } from '../../../shared/consts/const.js';
+import FormatTyp, { Position } from '../../../shared/enums/common.enum.js';
 import {
   createHeader,
   createLabelTextArray,
@@ -6,23 +8,26 @@ import {
   formatText,
   getContentTable,
   getTable,
+  getTStawkaPodatku,
   getValue,
 } from '../../../shared/PDF-functions.js';
-import { HeaderDefine } from '../../../shared/types/pdf-types.js';
-import { Procedura, TRodzajFaktury } from '../../../shared/consts/const.js';
-import { Fa, FP } from '../../types/fa1.types';
-import FormatTyp, { Position } from '../../../shared/enums/common.enum.js';
 import { FormContentState } from '../../../shared/types/additional-data.types';
-import { shouldAddMarza } from '../common/Wiersze.js';
+import { HeaderDefine } from '../../../shared/types/pdf-types.js';
+import { Fa, FP } from '../../types/fa1.types';
+import { addMarza } from '../common/Wiersze.js';
 
 export function generateWiersze(faVat: Fa): Content {
   const table: Content[] = [];
   const rodzajFaktury: string | number | undefined = getValue(faVat.RodzajFaktury);
-  const isP_PMarzy: boolean = Boolean(Number(getValue(faVat.Adnotacje?.P_PMarzy)));
+  const isP_PMarzy = Boolean(Number(getValue(faVat.Adnotacje?.P_PMarzy)));
   const faWiersze: Record<string, FP>[] = getTable(faVat.FaWiersze?.FaWiersz).map(
     (wiersz: Record<string, FP>): Record<string, FP> => {
-      const marza: Record<string, FP> = shouldAddMarza(rodzajFaktury, isP_PMarzy, wiersz)!;
-      return marza ? { ...wiersz, ...marza } : wiersz;
+      const marza: Record<string, FP> = addMarza(rodzajFaktury, isP_PMarzy, wiersz)!;
+
+      if (getValue(wiersz.P_12)) {
+        wiersz.P_12._text = getTStawkaPodatku(getValue(wiersz.P_12) as string, 1);
+      }
+      return { ...wiersz, ...marza };
     }
   );
   const definedHeaderLp: HeaderDefine[] = [
@@ -33,7 +38,7 @@ export function generateWiersze(faVat: Fa): Content {
     { name: 'P_7', title: 'Nazwa towaru lub usługi', format: FormatTyp.Default, width: '*' },
     { name: 'P_9A', title: 'Cena jedn. netto', format: FormatTyp.Currency, width: 'auto' },
     { name: 'P_9B', title: 'Cena jedn. brutto', format: FormatTyp.Currency, width: 'auto' },
-    { name: 'P_8B', title: 'Ilość', format: FormatTyp.Right, width: 'auto' },
+    { name: 'P_8B', title: 'Ilość', format: FormatTyp.Number, width: 'auto' },
     { name: 'P_8A', title: 'Miara', format: FormatTyp.Default, width: 'auto' },
     { name: 'P_10', title: 'Rabat', format: FormatTyp.Currency, width: 'auto' },
     { name: 'P_12', title: 'Stawka podatku', format: FormatTyp.Default, width: 'auto' },
