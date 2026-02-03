@@ -4,28 +4,28 @@ import {
   createLabelText,
   formatText,
   generateColumns,
+  generateLine,
   getTable,
   hasValue,
   verticalSpacing,
 } from '../../../shared/PDF-functions.js';
-import {
-  createLabelTextArray,
-  createSection,
-} from '../../../shared/PDF-functions.js';
 import FormatTyp from '../../../shared/enums/common.enum.js';
 import { Podmiot2, Podmiot2K } from '../../types/fa3.types';
 import { generateAdres } from './Adres.js';
-import { generateDaneIdentyfikacyjneTPodmiot1Dto } from './PodmiotDaneIdentyfikacyjneTPodmiot1Dto.js';
+import { generateDaneIdentyfikacyjneTPodmiot2Dto } from './PodmiotDaneIdentyfikacyjneTPodmiot2Dto.js';
 import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe.js';
 
 export function generatePodmiot2Podmiot2K(podmiot2: Podmiot2, podmiot2K: Podmiot2K): Content[] {
-  const result: Content[] = createHeader('Nabywca');
+  const result: Content[] = [];
+
+  result.push(generateLine());
+  result.push(createHeader('Nabywca'));
   let firstColumn: Content[] = [];
   let secondColumn: Content[] = [];
 
   firstColumn.push(createHeader('Dane identyfikacyjne'), createLabelText('Numer EORI: ', podmiot2.NrEORI));
   if (podmiot2.DaneIdentyfikacyjne) {
-    firstColumn.push(...generateDaneIdentyfikacyjneTPodmiot1Dto(podmiot2.DaneIdentyfikacyjne));
+    firstColumn.push(...generateDaneIdentyfikacyjneTPodmiot2Dto(podmiot2.DaneIdentyfikacyjne));
   }
 
   if (podmiot2.DaneKontaktowe) {
@@ -41,7 +41,7 @@ export function generatePodmiot2Podmiot2K(podmiot2: Podmiot2, podmiot2K: Podmiot
     });
   }
 
-  if(podmiot2K.Adres?.AdresL1?._text) {
+  if (podmiot2K.DaneIdentyfikacyjne) {
     firstColumn = generateCorrectedContent(podmiot2K, 'Treść korygowana');
     secondColumn = generateCorrectedContent(podmiot2, 'Treść korygująca');
   }
@@ -71,7 +71,7 @@ export function generateCorrectedContent(podmiot: Podmiot2 | Podmiot2K, header: 
     result.push(createLabelText('Identyfikator nabywcy: ', podmiot.IDNabywcy));
   }
   if (podmiot.DaneIdentyfikacyjne) {
-    result.push(...generateDaneIdentyfikacyjneTPodmiot1Dto(podmiot.DaneIdentyfikacyjne));
+    result.push(...generateDaneIdentyfikacyjneTPodmiot2Dto(podmiot.DaneIdentyfikacyjne));
   }
   if (podmiot.Adres) {
     result.push(formatText('Adres', [FormatTyp.Label, FormatTyp.LabelMargin]), generateAdres(podmiot.Adres));

@@ -5,8 +5,10 @@ import {
   formatText,
   generateColumns,
   getTable,
+  getValue,
   verticalSpacing,
 } from '../../../shared/PDF-functions.js';
+import { TAXPAYER_STATUS } from '../../../shared/consts/const.js';
 import FormatTyp from '../../../shared/enums/common.enum.js';
 import { Podmiot1, Podmiot1K } from '../../types/fa2.types';
 import { generateAdres } from './Adres.js';
@@ -27,13 +29,12 @@ export function generatePodmiot1Podmiot1K(podmiot1: Podmiot1, podmiot1K: Podmiot
     firstColumn.push(generateDaneKontaktowe(getTable(podmiot1.DaneKontaktowe)));
   }
   if (podmiot1.StatusInfoPodatnika) {
-    firstColumn.push(createLabelText('Status podatnika: ', podmiot1.StatusInfoPodatnika));
+    const statusInfo: string = TAXPAYER_STATUS[getValue(podmiot1.StatusInfoPodatnika)!];
+
+    firstColumn.push(createLabelText('Status podatnika: ', statusInfo));
   }
   if (firstColumn.length) {
-    result.push({
-      columns: [firstColumn, []],
-      columnGap: 20,
-    });
+    result.push(firstColumn);
   }
   firstColumn = generateCorrectedContent(podmiot1K, 'Treść korygowana');
   secondColumn = generateCorrectedContent(podmiot1, 'Treść korygująca');

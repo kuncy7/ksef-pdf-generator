@@ -1,8 +1,9 @@
 import pdfMake, { TCreatedPdf } from 'pdfmake/build/pdfmake.js';
 import pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { generateStyle, hasValue } from '../shared/PDF-functions.js';
+import { generateStyle, getValue, hasValue } from '../shared/PDF-functions.js';
 import { TRodzajFaktury } from '../shared/consts/const.js';
+import { ZamowienieKorekta } from './enums/invoice.enums.js';
 import { generateAdnotacje } from './generators/FA3/Adnotacje.js';
 import { generateDodatkoweInformacje } from './generators/FA3/DodatkoweInformacje.js';
 import { generatePlatnosc } from './generators/FA3/Platnosc.js';
@@ -17,9 +18,8 @@ import { generateDaneFaKorygowanej } from './generators/common/DaneFaKorygowanej
 import { generateNaglowek } from './generators/common/Naglowek.js';
 import { generateRozliczenie } from './generators/common/Rozliczenie.js';
 import { generateStopka } from './generators/common/Stopka.js';
-import { Faktura } from './types/fa3.types';
-import { ZamowienieKorekta } from './enums/invoice.enums.js';
 import { AdditionalDataTypes } from './types/common.types';
+import { Faktura } from './types/fa3.types';
 
 pdfMake.vfs = pdfFonts.vfs;
 
@@ -39,7 +39,8 @@ export function generateFA3(invoice: Faktura, additionalData: AdditionalDataType
         ZamowienieKorekta.Order,
         invoice.Fa?.P_15?._text ?? '',
         invoice.Fa?.RodzajFaktury?._text ?? '',
-        invoice.Fa?.KodWaluty?._text ?? ''
+        invoice.Fa?.KodWaluty?._text ?? '',
+        getValue(invoice.Fa?.Adnotacje?.PMarzy?.P_PMarzy) as string | undefined
       ),
       generatePodsumowanieStawekPodatkuVat(invoice),
       generateAdnotacje(invoice.Fa?.Adnotacje),

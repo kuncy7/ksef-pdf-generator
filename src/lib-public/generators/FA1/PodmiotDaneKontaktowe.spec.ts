@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { FP } from '../../types/fa1.types';
+import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe.js';
 
 vi.mock('../../../shared/PDF-functions', () => ({
   createLabelText: vi.fn((label: string, value: any) => ({
@@ -26,7 +26,7 @@ describe('generateDaneKontaktowe', () => {
     const tel = [{ _text: '123456789' }];
     const result = generateDaneKontaktowe(undefined, tel);
 
-    expect(result).toEqual([{ text: 'LABEL:Tel.: [object Object]\n' }]);
+    expect(result).toEqual([{ text: 'LABEL:Tel.: 123456789\n' }]);
   });
 
   it('returns email and all telephones in order', () => {
@@ -36,8 +36,8 @@ describe('generateDaneKontaktowe', () => {
 
     expect(result[0]).toEqual({ text: 'LABEL:Email: z@x.io' });
     expect(result.length).toBe(3);
-    expect(result[1]).toEqual({ text: 'LABEL:Tel.: [object Object]\n' });
-    expect(result[2]).toEqual({ text: 'LABEL:Tel.: [object Object]\n' });
+    expect(result[1]).toEqual({ text: 'LABEL:Tel.: 101\n' });
+    expect(result[2]).toEqual({ text: 'LABEL:Tel.: 202\n' });
   });
 
   it('handles multiple telephones', () => {

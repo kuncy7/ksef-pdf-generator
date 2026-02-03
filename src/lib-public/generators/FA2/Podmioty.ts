@@ -1,8 +1,9 @@
 import { Content } from 'pdfmake/interfaces';
 import { createSection, generateColumns, getTable, getValue } from '../../../shared/PDF-functions.js';
-import { Podmiot2K as Podmiot2Kfa1 } from '../../types/fa1.types';
+import { Adres } from '../../types/fa1.types';
 import { Podmiot3Podmiot2KDto } from '../../types/fa2-additional-types.js';
 import { Faktura, Podmiot2K as Podmiot2Kfa2, Podmiot3 } from '../../types/fa2.types';
+import { Podmiot2K } from '../../types/fa3.types';
 import { generatePodmiot1 } from './Podmiot1.js';
 import { generatePodmiot1Podmiot1K } from './Podmiot1Podmiot1K.js';
 import { generatePodmiot2 } from './Podmiot2.js';
@@ -13,20 +14,26 @@ import { generatePodmiotUpowazniony } from './PodmiotUpowazniony.js';
 
 export function generatePodmioty(invoice: Faktura): Content[] {
   const result: Content[] = [];
-  const podmiot2K: Podmiot2Kfa2[] = getTable(invoice.Fa?.Podmiot2K);
+  const podmiot2KTable: Podmiot2Kfa2[] = getTable(invoice.Fa?.Podmiot2K);
   const podmiot3: Podmiot3[] = getTable(invoice.Podmiot3);
 
-  if (invoice.Fa?.Podmiot1K || podmiot2K.length > 0) {
+  if (invoice.Fa?.Podmiot1K || podmiot2KTable.length > 0) {
     if (invoice.Fa?.Podmiot1K) {
       result.push(generatePodmiot1Podmiot1K(invoice.Podmiot1 ?? {}, invoice.Fa?.Podmiot1K));
     } else if (invoice.Podmiot1 != null) {
       result.push(generatePodmiot1(invoice.Podmiot1));
     }
 
-    if (podmiot2K.length > 0) {
-      podmiot2K.forEach((podmiot2K: Podmiot2Kfa2): void => {
+    if (invoice.Fa?.Podmiot2K) {
+      const podmiot2K = podmiot2KTable.find(
+        (podmiot) => getValue(podmiot.IDNabywcy) === getValue(invoice.Podmiot2?.IDNabywcy)
+      );
+
+      if (podmiot2K) {
         result.push(generatePodmiot2Podmiot2K(invoice.Podmiot2 ?? {}, podmiot2K));
-      });
+      } else {
+        result.push(createSection(generatePodmiot2(invoice.Podmiot2!), true));
+      }
     } else if (invoice.Podmiot2) {
       result.push(createSection(generatePodmiot2(invoice.Podmiot2!), true));
     }
@@ -40,7 +47,11 @@ export function generatePodmioty(invoice: Faktura): Content[] {
   }
 
   if (podmiot3.length > 0) {
-    const podmiot3Podmiot2KDto: Podmiot3Podmiot2KDto[] = getPodmiot3Podmiot2KDto(podmiot2K, podmiot3);
+    const podmiot3Podmiot2KDto: Podmiot3Podmiot2KDto[] = getPodmiot3Podmiot2KDto(podmiot2KTable, podmiot3);
+
+    podmiot3Podmiot2KDto.filter(
+      (podmiot3Podmiot2) => podmiot3Podmiot2.fakturaPodmiotNDto.IDNabywcy === invoice.Podmiot2?.IDNabywcy
+    );
 
     if (podmiot3Podmiot2KDto.length > 0) {
       podmiot3Podmiot2KDto.forEach((pdm2KDto: Podmiot3Podmiot2KDto, i: number): void => {
@@ -67,24 +78,20 @@ export function generatePodmioty(invoice: Faktura): Content[] {
   return createSection(result, true);
 }
 
-function getPodmiot3Podmiot2KDto(podmioty2K: Podmiot2Kfa2[], podmioty3: Podmiot3[]): Podmiot3Podmiot2KDto[] {
+function getPodmiot3Podmiot2KDto(podmioty2K: Podmiot2K[], podmioty3: Podmiot3[]): Podmiot3Podmiot2KDto[] {
   const result: Podmiot3Podmiot2KDto[] = [];
 
-  if (
-    podmioty2K.length > 1 &&
-    podmioty3.filter((p: Podmiot3): boolean => getValue(p.Rola) === '4').length > 0
-  ) {
-    let idx = 1;
-
+  if (podmioty3.filter((p: Podmiot3): boolean => getValue(p.Rola) === '4').length > 0) {
     podmioty3.forEach((podmiot3: Podmiot3): void => {
       if (getValue(podmiot3.Rola) === '4') {
-        if (podmioty2K.length > idx) {
-          result.push({
-            fakturaPodmiotNDto: podmiot3,
-            podmiot2KDto: podmioty2K[idx] as Podmiot2Kfa1,
-          });
-        }
-        idx++;
+        result.push({
+          fakturaPodmiotNDto: podmiot3,
+          podmiot2KDto: podmioty2K.find(
+            (podmiot) => getValue(podmiot.IDNabywcy) === getValue(podmiot3.IDNabywcy)
+          ) as Podmiot2K[] & {
+            Adres: Adres;
+          },
+        });
       } else {
         result.push({
           fakturaPodmiotNDto: podmiot3,
