@@ -120,7 +120,7 @@ function generateInformacje(stopka?: Stopka): Content[] {
   return result;
 }
 
-function generateQRCodeData(additionalData?: AdditionalDataTypes): Content[] {
+export function generateQRCodeData(additionalData?: AdditionalDataTypes): Content[] {
   const result: Content = [];
 
   if (additionalData?.qrCode && additionalData.nrKSeF) {
