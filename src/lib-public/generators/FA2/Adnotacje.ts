@@ -1,4 +1,6 @@
 import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
+import { DEFAULT_TABLE_LAYOUT } from '../../../shared/consts/FA.const.js';
+import FormatTyp from '../../../shared/enums/common.enum.js';
 import {
   createHeader,
   createLabelText,
@@ -9,10 +11,8 @@ import {
   hasValue,
   verticalSpacing,
 } from '../../../shared/PDF-functions.js';
-import { Adnotacje, NoweSrodkiTransportu, Zwolnienie } from '../../types/fa2.types';
-import FormatTyp from '../../../shared/enums/common.enum.js';
-import { DEFAULT_TABLE_LAYOUT } from '../../../shared/consts/const.js';
 import { FP } from '../../types/fa1.types';
+import { Adnotacje, NoweSrodkiTransportu, Zwolnienie } from '../../types/fa2.types';
 
 export function generateAdnotacje(adnotacje?: Adnotacje): Content[] {
   const result: Content[] = [];
@@ -62,7 +62,7 @@ export function generateAdnotacje(adnotacje?: Adnotacje): Content[] {
       adnotacje.NoweSrodkiTransportu?.P_42_5?._text === '2'
     ) {
       let obowiazekVAT: Content[] = [];
-      let value: string = ' ';
+      let value = ' ';
 
       if (adnotacje.NoweSrodkiTransportu.P_42_5?._text === '1') {
         value = 'Istnieje obowiązek wystawienia dokumentu VAT-22';
@@ -90,7 +90,7 @@ export function generateAdnotacje(adnotacje?: Adnotacje): Content[] {
       secondColumn.push({ text: 'Procedura trójstronna uproszczona' });
     }
     if (adnotacje.PMarzy?.P_PMarzy?._text === '1') {
-      let valueMarzy: string = '';
+      let valueMarzy = '';
 
       if (adnotacje.PMarzy.P_PMarzy_3_1?._text === '1') {
         valueMarzy = 'towary używane';

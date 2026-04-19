@@ -1,5 +1,5 @@
 import { Content } from 'pdfmake/interfaces';
-import { TAXPAYER_STATUS } from '../../../shared/consts/const.js';
+import { TAXPAYER_STATUS } from '../../../shared/consts/FA.const.js';
 import {
   createHeader,
   createLabelText,

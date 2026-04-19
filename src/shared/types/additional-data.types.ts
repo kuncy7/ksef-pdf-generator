@@ -1,6 +1,6 @@
-import { FP } from '../../lib-public/types/fa3.types';
 import { ContentTable, Style } from 'pdfmake/interfaces';
-import FormatTyp from '../enums/common.enum';
+import { FP } from '../../lib-public/types/fa3.types';
+import FormatTyp from '../enums/common.enum.js';
 
 export interface CreateLabelTextData {
   value: FP | string | number | undefined;

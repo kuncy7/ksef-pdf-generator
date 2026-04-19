@@ -1,10 +1,11 @@
 import { Content } from 'pdfmake/interfaces';
+import { TRolaPodmiotuUpowaznionegoFA2 } from '../../../shared/consts/FA.const.js';
+import { translateMap } from '../../../shared/generators/common/functions.js';
 import { createHeader, createLabelText, hasValue } from '../../../shared/PDF-functions.js';
 import { PodmiotUpowazniony } from '../../types/fa2.types';
 import { generatePodmiotAdres } from './PodmiotAdres.js';
 import { generateDaneIdentyfikacyjneTPodmiot1Dto } from './PodmiotDaneIdentyfikacyjneTPodmiot1Dto.js';
 import { generatePodmiotUpowaznionyDaneKontaktowe } from './PodmiotUpowaznionyDaneKontaktowe.js';
-import { getRolaUpowaznionegoString } from '../../../shared/generators/common/functions.js';
 
 export function generatePodmiotUpowazniony(podmiotUpowazniony: PodmiotUpowazniony | undefined): Content[] {
   if (!podmiotUpowazniony) {
@@ -13,7 +14,9 @@ export function generatePodmiotUpowazniony(podmiotUpowazniony: PodmiotUpowaznion
   const result: Content[] = createHeader('Podmiot upoważniony');
 
   if (hasValue(podmiotUpowazniony.RolaPU)) {
-    result.push(createLabelText('Rola: ', getRolaUpowaznionegoString(podmiotUpowazniony.RolaPU, 2)));
+    result.push(
+      createLabelText('Rola: ', translateMap(podmiotUpowazniony.RolaPU, TRolaPodmiotuUpowaznionegoFA2))
+    );
   }
   if (hasValue(podmiotUpowazniony.NrEORI)) {
     result.push(createLabelText('Numer EORI: ', podmiotUpowazniony.NrEORI));

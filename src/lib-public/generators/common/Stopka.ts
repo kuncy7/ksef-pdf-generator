@@ -1,4 +1,4 @@
-import { Content, ContentQr, ContentStack } from 'pdfmake/interfaces';
+import { Content, ContentQr } from 'pdfmake/interfaces';
 import FormatTyp from '../../../shared/enums/common.enum.js';
 import {
   createHeader,
@@ -32,6 +32,7 @@ export function generateStopka(
   const rejestry: Content[] = generateRejestry(stopka);
   const informacje: Content[] = generateInformacje(stopka);
   const qrCode: Content[] = generateQRCodeData(additionalData);
+  const qr2Code: Content[] = generateQR2CodeData(additionalData);
   const zalaczniki: Content[] = !additionalData?.isMobile ? generateZalaczniki(zalacznik) : [];
 
   const result: Content = [
@@ -43,6 +44,7 @@ export function generateStopka(
     ...informacje,
     ...(zalaczniki.length ? zalaczniki : []),
     { stack: [...qrCode], unbreakable: true },
+    { stack: [...qr2Code], unbreakable: true },
     createSection(
       [
         {
@@ -50,7 +52,7 @@ export function generateStopka(
           margin: [0, 8, 0, 0],
         },
       ],
-      true,
+      false,
       [0, 0, 0, 0]
     ),
   ];
@@ -87,7 +89,9 @@ function generateRejestry(stopka?: Stopka): Content[] {
   const content: FormContentState = getContentTable<(typeof faWiersze)[0]>(
     [...definedHeader],
     faWiersze,
-    '*'
+    '*',
+    undefined,
+    30
   );
 
   if (content.fieldsWithValue.length && content.content) {
@@ -118,95 +122,97 @@ function generateInformacje(stopka?: Stopka): Content[] {
 
 export function generateQRCodeData(additionalData?: AdditionalDataTypes, captions = true): Content[] {
   const result: Content = [];
+  const QR_SIZE = 150;
 
   if (additionalData?.qrCode) {
     const qrCode: ContentQr | undefined = generateQRCode(additionalData.qrCode);
 
     result.push(createHeader('Sprawdź, czy Twoja faktura znajduje się w KSeF!'));
     if (qrCode) {
+      qrCode.fit = QR_SIZE;
+      const qrCaption: Content[] = captions
+        ? [
+            {
+              text: additionalData.qr2Code ? 'OFFLINE' : (additionalData.nrKSeF ?? ''),
+              alignment: 'center',
+              margin: [0, 8, 0, 0],
+            },
+          ]
+        : [];
+
       result.push({
         columns: [
           {
-            stack: [
-              qrCode,
-
-              ...(captions
-                ? [
-                    {
-                      stack: [formatText(additionalData.nrKSeF ?? 'OFFLINE', FormatTyp.Default)],
-                      width: 'auto',
-                      alignment: 'center',
-                      marginLeft: 0,
-                      marginRight: 65,
-                      marginTop: 10,
-                    } as ContentStack,
-                  ]
-                : []),
-            ],
-            width: 200,
-          } as ContentStack,
+            stack: [qrCode, ...qrCaption],
+            alignment: 'center',
+            width: 'auto',
+          },
           {
             stack: [
               formatText(
                 'Nie możesz zeskanować kodu z obrazka? Kliknij w link weryfikacyjny i przejdź do weryfikacji faktury!',
-                FormatTyp.Value
+                FormatTyp.Label
               ),
               {
-                stack: [formatText(additionalData.qrCode, FormatTyp.Link)],
-                marginTop: 5,
+                text: formatText(additionalData.qrCode, FormatTyp.Link),
                 link: additionalData.qrCode,
+                margin: [0, 5, 0, 0],
               },
             ],
-
-            margin: [10, (qrCode.fit ?? 120) / 2 - 30, 0, 0],
-            width: 'auto',
-          } as ContentStack,
+            margin: [0, 2, 0, 0],
+            width: 330,
+            alignment: 'left',
+          },
         ],
+        columnGap: 20,
       });
     }
   }
-  if (additionalData?.qrCode2 && !additionalData.nrKSeF) {
-    const qrCode: ContentQr | undefined = generateQRCode(additionalData.qrCode2);
+  return createSection(result, true);
+}
 
-    result.push(createHeader('Zweryfikuj wystawcę faktury!'));
+function breakLongText(text: string, chunk = 60): string {
+  return text.match(new RegExp(`.{1,${chunk}}`, 'g'))?.join('\n') || text;
+}
+
+export function generateQR2CodeData(additionalData?: AdditionalDataTypes, captions = true): Content[] {
+  const result: Content = [];
+  const QR_SIZE = 210;
+
+  if (additionalData?.qr2Code) {
+    const qrCode: ContentQr | undefined = generateQRCode(additionalData.qr2Code);
+
+    result.push(createHeader('Zweryfikuj dostawcę faktury'));
     if (qrCode) {
-      qrCode.fit = 200;
+      qrCode.fit = QR_SIZE;
+      const qr2Caption: Content[] = captions
+        ? [{ text: 'CERTYFIKAT', alignment: 'center', margin: [0, 8, 0, 0] }]
+        : [];
 
       result.push({
         columns: [
           {
-            stack: [
-              qrCode,
-
-              {
-                stack: [formatText('CERTYFIKAT', FormatTyp.Default)],
-                width: 'auto',
-                alignment: 'center',
-                marginLeft: 0,
-                // ECDSA certificate QR Code fit almost full width so we need to increase margin
-                marginRight: additionalData.qrCode2.length > 300 ? 28 : 18,
-                marginTop: 10,
-              } as ContentStack,
-            ],
-            width: 200,
-          } as ContentStack,
+            stack: [qrCode, ...qr2Caption],
+            alignment: 'center',
+            width: 'auto',
+          },
           {
             stack: [
               formatText(
-                'Nie możesz zeskanować kodu z obrazka? Kliknij w link weryfikacyjny i przejdź do weryfikacji wystawcy!',
-                FormatTyp.Value
+                'Nie możesz zeskanować kodu z obrazka? Kliknij w link weryfikacyjny i przejdź do weryfikacji wystawcy faktury!',
+                FormatTyp.Label
               ),
               {
-                stack: [formatText(additionalData.qrCode2.substring(0, 150) + '...', FormatTyp.Link)],
-                marginTop: 5,
+                text: formatText(breakLongText(additionalData.qr2Code), FormatTyp.Link),
+                link: additionalData.qr2Code,
+                margin: [0, 5, 0, 0],
               },
             ],
-            link: additionalData.qrCode2,
-            noWrap: false,
-            margin: [10, (qrCode.fit ?? 120) / 2 - 30, 0, 0],
-            width: 'auto',
-          } as ContentStack,
+            margin: [0, 2, 0, 0],
+            alignment: 'left',
+          },
         ],
+        columnGap: 20,
       });
     }
   }

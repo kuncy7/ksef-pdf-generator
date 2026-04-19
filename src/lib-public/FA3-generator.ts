@@ -2,7 +2,8 @@ import pdfMake, { TCreatedPdf } from 'pdfmake/build/pdfmake.js';
 import pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { generateStyle, getValue, hasValue } from '../shared/PDF-functions.js';
-import { TRodzajFaktury } from '../shared/consts/const.js';
+import { TRodzajFaktury } from '../shared/consts/FA.const.js';
+import { Position } from '../shared/enums/common.enum.js';
 import { ZamowienieKorekta } from './enums/invoice.enums.js';
 import { generateAdnotacje } from './generators/FA3/Adnotacje.js';
 import { generateDodatkoweInformacje } from './generators/FA3/DodatkoweInformacje.js';
@@ -28,6 +29,7 @@ export function generateFA3(invoice: Faktura, additionalData: AdditionalDataType
     invoice.Fa?.RodzajFaktury?._text == TRodzajFaktury.KOR && hasValue(invoice.Fa?.OkresFaKorygowanej);
   const rabatOrRowsInvoice: Content = isKOR_RABAT ? generateRabat(invoice.Fa!) : generateWiersze(invoice.Fa!);
   const docDefinition: TDocumentDefinitions = {
+    watermark: additionalData?.watermark,
     content: [
       ...generateNaglowek(invoice.Fa, additionalData, invoice.Zalacznik),
       generateDaneFaKorygowanej(invoice.Fa),
@@ -50,6 +52,13 @@ export function generateFA3(invoice: Faktura, additionalData: AdditionalDataType
       generateWarunkiTransakcji(invoice.Fa?.WarunkiTransakcji),
       ...generateStopka(additionalData, invoice.Stopka, invoice.Naglowek, invoice.Fa?.WZ, invoice.Zalacznik),
     ],
+    footer: (currentPage, pageCount) => {
+      return {
+        text: currentPage.toString() + ' z ' + pageCount,
+        alignment: Position.RIGHT,
+        margin: [0, 0, 40, 0],
+      };
+    },
     ...generateStyle(),
   };
 

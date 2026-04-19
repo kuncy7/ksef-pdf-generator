@@ -1,6 +1,6 @@
 import pdfMake, { TCreatedPdf } from 'pdfmake/build/pdfmake.js';
 import { Content, ContentText, TDocumentDefinitions } from 'pdfmake/interfaces.js';
-import { generateQRCodeData } from '../../lib-public/generators/common/Stopka.js';
+import { generateQR2CodeData, generateQRCodeData } from '../../lib-public/generators/common/Stopka.js';
 import { generatePodmioty } from '../../lib-public/generators/FA3/Podmioty.js';
 import { AdditionalDataTypes } from '../../lib-public/types/common.types.js';
 import { Fa as Fa3, Naglowek } from '../../lib-public/types/fa3.types';
@@ -50,10 +50,12 @@ export class ConfirmationPdfGenerator implements IPdfGenerator {
 
   private generateStopka(additionalData?: AdditionalDataTypes, naglowek?: Naglowek): Content[] {
     const qrCode: Content[] = generateQRCodeData(additionalData, false);
+    const qr2Code: Content[] = generateQR2CodeData(additionalData, false);
 
     const result: Content = [
       verticalSpacing(1),
       { stack: [...qrCode], unbreakable: false },
+      { stack: [...qr2Code], unbreakable: false },
       createSection(
         [
           {
@@ -61,7 +63,7 @@ export class ConfirmationPdfGenerator implements IPdfGenerator {
             margin: [0, 8, 0, 0],
           },
         ],
-        true,
+        false,
         [0, 0, 0, 0]
       ),
     ];
@@ -123,7 +125,10 @@ export class ConfirmationPdfGenerator implements IPdfGenerator {
         ],
       },
       { ...(formatText('Numer Faktury:', FormatTyp.ValueMedium) as ContentText), alignment: Position.RIGHT },
-      { ...(formatText(fa?.P_2?._text, FormatTyp.HeaderPosition) as ContentText), alignment: Position.RIGHT },
+      {
+        ...(formatText(getValue(fa?.P_2), FormatTyp.HeaderPosition) as ContentText),
+        alignment: Position.RIGHT,
+      },
       {
         ...(formatText(confirmationName, [FormatTyp.ValueMedium, FormatTyp.Default]) as ContentText),
         alignment: Position.RIGHT,

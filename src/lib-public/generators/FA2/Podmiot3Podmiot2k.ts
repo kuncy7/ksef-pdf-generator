@@ -1,4 +1,7 @@
 import { Content } from 'pdfmake/interfaces';
+import { FA2RolaPodmiotu3 } from '../../../shared/consts/FA.const.js';
+import FormatTyp from '../../../shared/enums/common.enum.js';
+import { translateMap } from '../../../shared/generators/common/functions.js';
 import {
   createHeader,
   createLabelText,
@@ -7,14 +10,12 @@ import {
   getTable,
   hasValue,
 } from '../../../shared/PDF-functions.js';
+import { Adres } from '../../types/fa1.types';
 import { Podmiot3Podmiot2KDto } from '../../types/fa2-additional-types.js';
-import { getRolaString } from '../../../shared/generators/common/functions.js';
+import { Podmiot1DaneKontaktowe, Podmiot2K, Podmiot3 } from '../../types/fa2.types';
 import { generatePodmiotAdres } from './PodmiotAdres.js';
 import { generateDaneIdentyfikacyjneTPodmiot2Dto } from './PodmiotDaneIdentyfikacyjneTPodmiot2Dto.js';
 import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe.js';
-import FormatTyp from '../../../shared/enums/common.enum.js';
-import { Podmiot1DaneKontaktowe, Podmiot2K, Podmiot3 } from '../../types/fa2.types';
-import { Adres } from '../../types/fa1.types';
 
 export function generateDaneIdentyfikacyjneTPodmiot3Dto(
   podmiot2KDto: Podmiot3Podmiot2KDto | undefined,
@@ -40,7 +41,7 @@ export function generateDaneIdentyfikacyjneTPodmiot3Dto(
     result.push(
       ...createHeader('Dane identyfikacyjne'),
       createLabelText('Numer EORI: ', podmiot1.NrEORI),
-      createLabelText('Rola: ', getRolaString(podmiot1.Rola, 2)),
+      createLabelText('Rola: ', translateMap(podmiot1.Rola, FA2RolaPodmiotu3)),
       createLabelText('Rola inna: ', podmiot1.OpisRoli),
       createLabelText('Udział: ', podmiot1.Udzial, FormatTyp.Percentage)
     );

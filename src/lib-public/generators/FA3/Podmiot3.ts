@@ -6,12 +6,13 @@ import {
   generateLine,
   generateTwoColumns,
 } from '../../../shared/PDF-functions.js';
+import { FA3RolaPodmiotu3 } from '../../../shared/consts/FA.const.js';
 import FormatTyp from '../../../shared/enums/common.enum.js';
+import { translateMap } from '../../../shared/generators/common/functions.js';
 import { Podmiot3 } from '../../types/fa3.types';
+import { generateAdres } from '../FA2/Adres.js';
 import { generateDaneIdentyfikacyjneTPodmiot3Dto } from './PodmiotDaneIdentyfikacyjneTPodmiot3Dto.js';
 import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe.js';
-import { getRolaString } from '../../../shared/generators/common/functions.js';
-import { generateAdres } from '../FA2/Adres.js';
 
 export function generatePodmiot3(podmiot: Podmiot3, index: number): Content[] {
   const result: Content[] = [];
@@ -22,7 +23,7 @@ export function generatePodmiot3(podmiot: Podmiot3, index: number): Content[] {
     createLabelText('Identyfikator nabywcy: ', podmiot.IDNabywcy),
     createLabelText('Numer EORI: ', podmiot.NrEORI),
     ...generateDaneIdentyfikacyjneTPodmiot3Dto(podmiot.DaneIdentyfikacyjne),
-    createLabelText('Rola: ', getRolaString(podmiot.Rola, 3)),
+    createLabelText('Rola: ', translateMap(podmiot.Rola, FA3RolaPodmiotu3)),
     createLabelText('Rola inna: ', podmiot.OpisRoli),
     createLabelText('Udział: ', podmiot.Udzial, [FormatTyp.Percentage]),
   ];

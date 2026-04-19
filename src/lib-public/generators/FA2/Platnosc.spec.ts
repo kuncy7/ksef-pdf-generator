@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, it, test, vi } from 'vitest';
-import { generatePlatnosc } from './Platnosc.js';
-import type { Platnosc, RachunekBankowy, Skonto } from '../../types/fa2.types';
 import type { Content } from 'pdfmake/interfaces';
+import { beforeEach, describe, expect, it, test, vi } from 'vitest';
+import { FormaPlatnosci } from '../../../shared/consts/FA.const.js';
+import { translateMap } from '../../../shared/generators/common/functions.js';
 import {
   createHeader,
   createLabelText,
@@ -10,7 +10,8 @@ import {
   getContentTable,
   hasValue,
 } from '../../../shared/PDF-functions.js';
-import { getFormaPlatnosciString } from '../../../shared/generators/common/functions.js';
+import type { Platnosc, RachunekBankowy, Skonto } from '../../types/fa2.types';
+import { generatePlatnosc } from './Platnosc.js';
 import { generujRachunekBankowy } from './RachunekBankowy.js';
 
 vi.mock('../../../shared/PDF-functions', () => ({
@@ -24,10 +25,6 @@ vi.mock('../../../shared/PDF-functions', () => ({
   getValue: vi.fn((obj: any) => obj?._text ?? obj ?? ''),
   getContentTable: vi.fn(() => ({ content: [{ text: 'mockTable' }] })),
   hasValue: vi.fn((v: any) => !!v),
-}));
-
-vi.mock('../../../shared/generators/common/functions', () => ({
-  getFormaPlatnosciString: vi.fn((v: any) => `Forma: ${v}`),
 }));
 
 vi.mock('./RachunekBankowy', () => ({
@@ -80,7 +77,7 @@ describe(generatePlatnosc.name, () => {
     const result = generatePlatnosc(platnosc as Platnosc);
 
     expect(hasValue).toHaveBeenCalledWith({ _text: 'Karta' });
-    expect(getFormaPlatnosciString).toHaveBeenCalledWith({ _text: 'Karta' });
+    expect(translateMap).toHaveBeenCalledWith({ _text: 'Karta' }, FormaPlatnosci);
   });
 
   it('generuje tabelę zapłaty częściowej i terminów płatności', () => {

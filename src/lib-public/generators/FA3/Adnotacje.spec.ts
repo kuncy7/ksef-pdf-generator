@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, test, vi } from 'vitest';
-import { createHeader, createLabelText, formatText, getTable } from '../../../shared/PDF-functions';
+import { createHeader, createLabelText, formatText, getTable } from '../../../shared/PDF-functions.js';
 import { generateAdnotacje, generateDostawy } from './Adnotacje';
 
 vi.mock('../../../shared/PDF-functions', () => ({

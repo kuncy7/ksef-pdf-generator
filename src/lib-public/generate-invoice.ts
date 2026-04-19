@@ -1,12 +1,14 @@
-import { generateFA1 } from './FA1-generator.js';
-import { Faktura as Faktura1 } from './types/fa1.types';
-import { generateFA2 } from './FA2-generator.js';
-import { Faktura as Faktura2 } from './types/fa2.types';
-import { generateFA3 } from './FA3-generator.js';
-import { Faktura as Faktura3 } from './types/fa3.types';
-import { parseXML } from '../shared/XML-parser.js';
 import { TCreatedPdf } from 'pdfmake/build/pdfmake.js';
+import { parseXML } from '../shared/XML-parser.js';
+import { generateFA1 } from './FA1-generator.js';
+import { generateFA2 } from './FA2-generator.js';
+import { generateFA3 } from './FA3-generator.js';
+import { generateFARR } from './FARR-generator.js';
 import { AdditionalDataTypes } from './types/common.types';
+import { Faktura as Faktura1 } from './types/fa1.types';
+import { Faktura as Faktura2 } from './types/fa2.types';
+import { Faktura as Faktura3 } from './types/fa3.types';
+import { FaRR } from './types/FaRR.types';
 
 export async function generateInvoice(
   file: File,
@@ -39,7 +41,12 @@ export async function generateInvoice(
       case 'FA (3)':
         pdf = generateFA3((xml as any).Faktura as Faktura3, additionalData);
         break;
+      case 'FA_RR (1)':
+      case 'FA_RR(1)':
+        pdf = generateFARR((xml as any).Faktura as FaRR, additionalData);
+        break;
     }
+
     switch (formatType) {
       case 'blob':
         pdf.getBlob((blob: Blob): void => {

@@ -1,4 +1,4 @@
-import type { Content } from 'pdfmake/interfaces';
+import { Content } from 'pdfmake/interfaces';
 import { describe, expect, it, vi } from 'vitest';
 import { generateDaneIdentyfikacyjneTPodmiot3Dto } from './Podmiot3Podmiot2k.js';
 
@@ -9,10 +9,6 @@ vi.mock('../../../shared/PDF-functions', () => ({
   getTable: vi.fn((data: any) => (data ? ['table:data'] : [])),
   hasValue: vi.fn((val: any) => val !== undefined && val !== null && val !== ''),
   generateLine: vi.fn((): Content[] => [{ line: true } as any]),
-}));
-
-vi.mock('../../../shared/generators/common/functions', () => ({
-  getRolaString: vi.fn((rola: any) => `rola:${rola}`),
 }));
 
 vi.mock('./PodmiotAdres', () => ({

@@ -1,6 +1,6 @@
 import { Content } from 'pdfmake/interfaces';
-import { Procedura, TRodzajFaktury } from '../../../shared/consts/const.js';
-import { default as FormatTyp, Position } from '../../../shared/enums/common.enum.js';
+import { Procedura, TRodzajFaktury } from '../../../shared/consts/FA.const.js';
+import FormatTyp, { Position } from '../../../shared/enums/common.enum.js';
 import {
   createHeader,
   createLabelTextArray,
@@ -101,7 +101,7 @@ export function generateZamowienie(
       table.push(content.content);
     }
   }
-  const ceny = `Faktura wystawiona w cenach ${content.fieldsWithValue.includes('P_11') ? 'netto' : 'brutto'} w walucie ${KodWaluty}`;
+  const ceny = `Faktura wystawiona w walucie ${KodWaluty}`;
   let opis: Content = '';
 
   if (Number(p_15) > 0 && rodzajFaktury == TRodzajFaktury.ZAL) {

@@ -52,7 +52,7 @@ export class CliApplication {
       .argument('<output>', 'Ścieżka do wyjściowego pliku PDF')
       .option('--nr-ksef <numer>', 'Numer KSeF faktury')
       .option('--qr-code <url>', 'URL do kodu QR faktury')
-      .option('--qr-code2 <url>', 'URL do kodu QR certyfikatu')
+      .option('--qr2-code <url>', 'URL do kodu QR certyfikatu')
       .action(async (input: string, output: string, options: any) => {
         try {
           const additionalData: any = {};
@@ -63,8 +63,8 @@ export class CliApplication {
           if (options.qrCode) {
             additionalData.qrCode = options.qrCode;
           }
-          if (options.qrCode2) {
-            additionalData.qrCode2 = options.qrCode2;
+          if (options.qr2Code) {
+            additionalData.qr2Code = options.qr2Code;
           }
 
           if (!this.invoiceGenerator) {
@@ -122,7 +122,7 @@ export class CliApplication {
       .argument('<input>', 'Ścieżka do pliku XML faktury (FA(1), FA(2) lub FA(3))')
       .argument('<output>', 'Ścieżka do wyjściowego pliku PDF')
       .option('--qr-code <url>', 'URL do kodu QR faktury')
-      .option('--qr-code2 <url>', 'URL do kodu QR certyfikatu')
+      .option('--qr2-code <url>', 'URL do kodu QR certyfikatu')
       .action(async (input: string, output: string, options: any) => {
         try {
           const additionalData: any = {};
@@ -130,8 +130,8 @@ export class CliApplication {
           if (options.qrCode) {
             additionalData.qrCode = options.qrCode;
           }
-          if (options.qrCode2) {
-            additionalData.qrCode2 = options.qrCode2;
+          if (options.qr2Code) {
+            additionalData.qr2Code = options.qr2Code;
           }
 
           if (!this.confirmationGenerator) {

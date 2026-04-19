@@ -1,4 +1,4 @@
-import pdfMake from 'pdfmake/build/pdfmake';
+import pdfMake from 'pdfmake/build/pdfmake.js';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as XMLParser from '../shared/XML-parser.js';
 import { generatePDFUPO } from './UPO-generator.js';

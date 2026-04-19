@@ -1,4 +1,4 @@
-import pdfMake from 'pdfmake/build/pdfmake';
+import pdfMake from 'pdfmake/build/pdfmake.js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { generateFA1 } from './FA1-generator.js';
 import { Faktura } from './types/fa1.types';

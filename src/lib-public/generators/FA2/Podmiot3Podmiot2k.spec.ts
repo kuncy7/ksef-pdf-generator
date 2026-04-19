@@ -11,10 +11,6 @@ vi.mock('../../../shared/PDF-functions', () => ({
   generateLine: vi.fn((): Content[] => [{ line: true } as any]),
 }));
 
-vi.mock('../../../shared/generators/common/functions', () => ({
-  getRolaString: vi.fn((rola: any) => `rola:${rola}`),
-}));
-
 vi.mock('./PodmiotAdres', () => ({
   generatePodmiotAdres: vi.fn((adres: any, label?: string) => [`adres:${label ?? ''}`]),
 }));

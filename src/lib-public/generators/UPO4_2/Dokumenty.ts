@@ -1,4 +1,6 @@
 import { Content } from 'pdfmake/interfaces';
+import { DEFAULT_TABLE_LAYOUT } from '../../../shared/consts/FA.const.js';
+import FormatTyp from '../../../shared/enums/common.enum.js';
 import {
   formatText,
   generateLine,
@@ -8,13 +10,11 @@ import {
   hasValue,
   verticalSpacing,
 } from '../../../shared/PDF-functions.js';
+import { FormContentState } from '../../../shared/types/additional-data.types';
 import { HeaderDefine } from '../../../shared/types/pdf-types.js';
 import { Dokument, IDKontekstu, Potwierdzenie } from '../../types/upo-v4_2.types';
-import FormatTyp from '../../../shared/enums/common.enum.js';
-import { FormContentState } from '../../../shared/types/additional-data.types';
-import { DEFAULT_TABLE_LAYOUT } from '../../../shared/consts/const.js';
 
-export function generateDokumnetUPO(potwierdzenie: Potwierdzenie): Content[] {
+export function generateDokumentUPO(potwierdzenie: Potwierdzenie): Content[] {
   const dokumenty: Dokument[] = getTable(potwierdzenie.Dokument);
 
   const result: Content[] = [];
@@ -66,7 +66,7 @@ export function generateDokumnetUPO(potwierdzenie: Potwierdzenie): Content[] {
   const idKontekstu: IDKontekstu | undefined = potwierdzenie?.Uwierzytelnienie?.IdKontekstu;
 
   if (idKontekstu) {
-    let typKontekstu: string = '';
+    let typKontekstu = '';
     let id: string | number | undefined;
 
     if (hasValue(idKontekstu.IdDostawcyUslugPeppol)) {

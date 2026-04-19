@@ -1,4 +1,5 @@
 import { Content, ContentTable } from 'pdfmake/interfaces';
+import FormatTyp, { Position } from '../../../shared/enums/common.enum.js';
 import {
   createHeader,
   createLabelText,
@@ -10,14 +11,14 @@ import {
   getContentTable,
   getTable,
 } from '../../../shared/PDF-functions.js';
+import { FormContentState } from '../../../shared/types/additional-data.types';
 import { HeaderDefine } from '../../../shared/types/pdf-types.js';
 import { Rozliczenie as Rozliczenie1, Zenia } from '../../types/fa1.types';
 import { Rozliczenie as Rozliczenie2, Rozliczenie as Rozliczenie3 } from '../../types/fa2.types';
-import FormatTyp, { Position } from '../../../shared/enums/common.enum.js';
-import { FormContentState } from '../../../shared/types/additional-data.types';
+import { Rozliczenie as RozliczenieRR } from '../../types/FaRR.types';
 
 export function generateRozliczenie(
-  rozliczenie: Rozliczenie1 | Rozliczenie2 | Rozliczenie3 | undefined,
+  rozliczenie: Rozliczenie1 | Rozliczenie2 | Rozliczenie3 | RozliczenieRR | undefined,
   KodWaluty: string
 ): Content[] {
   if (!rozliczenie) {
@@ -31,11 +32,13 @@ export function generateRozliczenie(
       title: 'Powód odliczenia',
       name: 'Powod',
       format: FormatTyp.Default,
+      width: '*',
     },
     {
-      title: 'Kwota odliczenia',
+      title: 'Kwota',
       name: 'Kwota',
       format: FormatTyp.Currency,
+      width: 'auto',
     },
   ];
   const headerObciazenia: HeaderDefine[] = [
@@ -43,11 +46,13 @@ export function generateRozliczenie(
       name: 'Powod',
       title: 'Powód obciążenia',
       format: FormatTyp.Default,
+      width: '*',
     },
     {
       name: 'Kwota',
-      title: 'Kwota obciążenia',
+      title: 'Kwota',
       format: FormatTyp.Currency,
+      width: 'auto',
     },
   ];
   const tableObciazenia: FormContentState = getContentTable<(typeof obciazenia)[0]>(

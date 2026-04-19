@@ -64,7 +64,7 @@ node dist/cli/index.js invoice invoice.xml output.pdf
 node dist/cli/index.js invoice invoice.xml output.pdf --nr-ksef "123456" --qr-code "https://example.com"
 
 # Generowanie faktury offline z użyciem kodu QR1 i QR2
-node dist/cli/index.js invoice invoice.xml output.pdf --qr-code "https://example.com" --qr-code2 "https://example.com"
+node dist/cli/index.js invoice invoice.xml output.pdf --qr-code "https://example.com" --qr2-code "https://example.com"
 ```
 
 #### 3. Generowanie PDF UPO (Urzędowego Poświadczenia Odbioru)
@@ -98,13 +98,13 @@ node dist/cli/index.js confirmation <ścieżka-do-xml> <ścieżka-wyjściowa-pdf
 
 ```bash
 # Generowanie potwierdzenia transakcji dla faktury z przykładowego pliku
-node dist/cli/index.js confirmation assets/invoice.xml output/potwierdzenie.pdf --qr-code "https://example.com" --qr-code2 "https://example.com"
+node dist/cli/index.js confirmation assets/invoice.xml output/potwierdzenie.pdf --qr-code "https://example.com" --qr2-code "https://example.com"
 
 # Generowanie z bezwzględną ścieżką
-node dist/cli/index.js confirmation C:\Users\lukaszw\Documents\faktura.xml C:\Output\potwierdzenie.pdf --qr-code "https://example.com" --qr-code2 "https://example.com"
+node dist/cli/index.js confirmation C:\Users\lukaszw\Documents\faktura.xml C:\Output\potwierdzenie.pdf --qr-code "https://example.com" --qr2-code "https://example.com"
 
 # Generowanie z plikiem w tym samym katalogu
-node dist/cli/index.js confirmation invoice.xml output.pdf --qr-code "https://example.com" --qr-code2 "https://example.com"
+node dist/cli/index.js confirmation invoice.xml output.pdf --qr-code "https://example.com" --qr2-code "https://example.com"
 ```
 
 #### 4. Przetwarzanie wielu plików

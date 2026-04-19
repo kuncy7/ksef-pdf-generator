@@ -7,9 +7,9 @@ import {
   hasValue,
   makeBreakable,
 } from '../../../shared/PDF-functions.js';
-import { DEFAULT_TABLE_LAYOUT } from '../../../shared/consts/const.js';
+import { DEFAULT_TABLE_LAYOUT, TypRachunkowWlasnych } from '../../../shared/consts/FA.const.js';
 import FormatTyp from '../../../shared/enums/common.enum.js';
-import { getTypRachunkowWlasnych } from '../../../shared/generators/common/functions.js';
+import { translateMap } from '../../../shared/generators/common/functions.js';
 import { FP } from '../../types/fa1.types';
 import { RachunekBankowy } from '../../types/fa2.types';
 
@@ -40,7 +40,10 @@ export const generujRachunekBankowy: (accounts?: Record<string, FP>[], title?: s
     ]);
     table.push([
       formatText('Rachunek własny banku', FormatTyp.GrayBoldTitle),
-      formatText(makeBreakable(getTypRachunkowWlasnych(account.RachunekWlasnyBanku), 20), FormatTyp.Default),
+      formatText(
+        makeBreakable(translateMap(account.RachunekWlasnyBanku, TypRachunkowWlasnych), 20),
+        FormatTyp.Default
+      ),
     ]);
     table.push([
       formatText('Nazwa banku', FormatTyp.GrayBoldTitle),
@@ -66,7 +69,7 @@ export const generujRachunekBankowy: (accounts?: Record<string, FP>[], title?: s
         unbreakable: true,
         table: {
           body: table,
-          widths: ['*', 'auto'],
+          widths: ['auto', '*'],
         },
         layout: DEFAULT_TABLE_LAYOUT,
       } as ContentTable,

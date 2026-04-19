@@ -1,5 +1,5 @@
 import { Content } from 'pdfmake/interfaces';
-import { DEFAULT_TABLE_LAYOUT } from '../../../shared/consts/const.js';
+import { DEFAULT_TABLE_LAYOUT } from '../../../shared/consts/FA.const.js';
 import FormatTyp from '../../../shared/enums/common.enum.js';
 import {
   formatText,

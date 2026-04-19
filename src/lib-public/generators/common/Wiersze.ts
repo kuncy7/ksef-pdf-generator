@@ -1,6 +1,6 @@
-import { TRodzajFaktury } from '../../../shared/consts/const.js';
-import { FP } from '../../types/fa1.types';
+import { TRodzajFaktury } from '../../../shared/consts/FA.const.js';
 import { getValue } from '../../../shared/PDF-functions.js';
+import { FP } from '../../types/fa1.types';
 
 export function addMarza(
   rodzajFaktury: string | number | undefined,

@@ -1,4 +1,4 @@
-import FormatTyp from '../enums/common.enum';
+import FormatTyp from '../enums/common.enum.js';
 
 export interface PdfTableData {
   widths?: string[];

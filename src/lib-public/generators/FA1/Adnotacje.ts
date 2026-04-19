@@ -1,4 +1,6 @@
 import { Content, ContentTable } from 'pdfmake/interfaces';
+import { DEFAULT_TABLE_LAYOUT } from '../../../shared/consts/FA.const.js';
+import FormatTyp from '../../../shared/enums/common.enum.js';
 import {
   createHeader,
   createLabelText,
@@ -8,8 +10,6 @@ import {
   verticalSpacing,
 } from '../../../shared/PDF-functions.js';
 import { Adnotacje } from '../../types/fa1.types';
-import FormatTyp from '../../../shared/enums/common.enum.js';
-import { DEFAULT_TABLE_LAYOUT } from '../../../shared/consts/const.js';
 
 export function generateAdnotacje(adnotacje?: Adnotacje): Content[] {
   const result: Content[] = [];
