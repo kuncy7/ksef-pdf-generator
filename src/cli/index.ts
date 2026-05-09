@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import { CliApplication } from './application/index.js';
+import pkg from '../../package.json';
 
 (async () => {
   const app = new CliApplication();
@@ -11,7 +12,7 @@ import { CliApplication } from './application/index.js';
   program
     .name('ksef-pdf')
     .description('Generator PDF dla faktur i UPO z systemu KSeF')
-    .version('0.0.1');
+    .version(pkg.version);
 
   app.setupCommands(program);
   program.parse(process.argv);
