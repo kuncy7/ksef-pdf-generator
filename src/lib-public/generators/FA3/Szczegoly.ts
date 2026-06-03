@@ -1,4 +1,8 @@
+import i18n from 'i18next';
 import { Content } from 'pdfmake/interfaces';
+import { TRodzajFaktury } from '../../../shared/consts/FA.const.js';
+import FormatTyp from '../../../shared/enums/common.enum.js';
+import { formatDateTime } from '../../../shared/generators/common/functions.js';
 import {
   createHeader,
   createLabelText,
@@ -11,15 +15,11 @@ import {
   getValue,
   hasColumnsValue,
   hasValue,
-} from '../../../shared/PDF-functions';
-import { HeaderDefine } from '../../../shared/types/pdf-types';
-import { TRodzajFaktury } from '../../../shared/consts/FA.const';
-import { Fa, ZaliczkaCzesciowa } from '../../types/fa3.types';
+} from '../../../shared/PDF-functions.js';
+import { HeaderDefine } from '../../../shared/types/pdf-types.js';
 import { ObjectKeysOfFP, TypesOfValues } from '../../../shared/types/universal.types';
-import FormatTyp from '../../../shared/enums/common.enum';
 import { FA3FakturaZaliczkowaData } from '../../types/common.types';
-import { formatDateTime } from '@shared/generators/common/functions';
-import i18n from 'i18next';
+import { Fa, ZaliczkaCzesciowa } from '../../types/fa3.types';
 
 export function generateSzczegoly(faVat: Fa): Content[] {
   const faWiersze = getTable(faVat.FaWiersz);

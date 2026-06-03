@@ -1,5 +1,6 @@
-import { FP as FP2 } from '../../../lib-public/types/fa2.types';
 import i18n from 'i18next';
+import packageInfo from '../../../../package.json' with { type: 'json' };
+import { FP as FP2 } from '../../../lib-public/types/fa2.types';
 
 export function translateMap(value: FP2 | string | undefined, map: Record<string, string>): string {
   let valueToTranslate = typeof value === 'string' ? value : value?._text;
@@ -88,4 +89,8 @@ export function formatTime(data?: string, withoutSeconds?: boolean): string {
     return `${hours}:${minutes}`;
   }
   return `${hours}:${minutes}:${seconds}`;
+}
+
+export function createVersionLabel(application?: string): string {
+  return `${application ? application : i18n.t('invoice.footer.appName')} (ksef-pdf-generator - ${i18n.t('invoice.footer.version')} ${packageInfo.version})`;
 }
