@@ -30,7 +30,7 @@ export class ConfirmationPdfGenerator implements IPdfGenerator {
     let pdf: TCreatedPdf;
 
     pdf = this.generateConfirmation((xml as any).Faktura as Faktura, additionalData);
-    return new Promise<Blob>((resolve) => pdf.getBlob((blob) => resolve(blob)));
+    return pdf.getBlob();
   }
 
   private generateConfirmation(invoice: Faktura, additionalData: AdditionalDataTypes): TCreatedPdf {
