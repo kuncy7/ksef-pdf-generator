@@ -30,3 +30,7 @@ export interface AdditionalDataTypes {
   isMobile?: boolean;
   watermark?: string;
 }
+
+export type TranslationKey<T> = {
+  [K in keyof T]: T[K] extends object ? TranslationKey<T[K]> : string;
+};

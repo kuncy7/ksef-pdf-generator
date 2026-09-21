@@ -1,0 +1,87 @@
+import i18n from 'i18next';
+import pdfMake, { TCreatedPdf } from 'pdfmake/build/pdfmake.js';
+import pdfFonts from 'pdfmake/build/vfs_fonts.js';
+import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
+import { generateStyle, getTable } from '../shared/PDF-functions.js';
+import { Position } from '../shared/enums/common.enum.js';
+import { SectionType } from '../shared/enums/pef-invoice.enum.js';
+import { generateAccountReckoning } from './generators/PEF/AccountReckoning.js';
+import { generateAccountingParty } from './generators/PEF/AccountingParty.js';
+import { generateAllowanceCharge } from './generators/PEF/AllowanceCharge.js';
+import { generateDelivery } from './generators/PEF/Delivery.js';
+import { generateDiffSummary } from './generators/PEF/DiffSummary.js';
+import { generateInvoiceDescription } from './generators/PEF/InvoiceDescription.js';
+import { generateInvoiceHeader } from './generators/PEF/InvoiceHeader.js';
+import { generateInvoiceLine } from './generators/PEF/InvoiceLine.js';
+import { generateLegalMonetaryTotal } from './generators/PEF/LegalMonetaryTotal.js';
+import { generatePayeeParty } from './generators/PEF/PayeeParty.js';
+import { generatePayment } from './generators/PEF/Payment.js';
+import { generateReceiverParty } from './generators/PEF/ReceiverParty.js';
+import { generateFooter } from './generators/PEF/Steeper.js';
+import { generateTaxRepresentativeParty } from './generators/PEF/TaxRepresentativeParty.js';
+import { generateTaxTotal } from './generators/PEF/TaxTotal.js';
+import { AdditionalDataTypes } from './types/common.types';
+import { PEFCorrectiveInvoice } from './types/pef-invoice-corrective.types';
+import {
+  getExtensionFour,
+  getExtensionOne,
+  getExtensionTwo,
+  getUBLExtensionArray,
+  PEFType,
+} from './types/pef.types.js';
+
+pdfMake.addVirtualFileSystem(pdfFonts);
+
+export function generateCorrectivePEF(
+  invoice: PEFCorrectiveInvoice,
+  additionalData: AdditionalDataTypes
+): TCreatedPdf {
+  const content: Content[] = [];
+
+  const UBLExtensionArray = getUBLExtensionArray(invoice);
+  const extensionFour = getExtensionFour(UBLExtensionArray);
+  const sellerSupplierParty = extensionFour?.AdditionalAddressData?.SellerSupplierParty;
+  const receiverParty = extensionFour?.AdditionalAddressData?.ReceiverParty;
+  const totalTaxBeforeCorrection = getExtensionOne(UBLExtensionArray)?.OriginalInvoiceData?.TaxTotal;
+  const totalTaxSummary = getExtensionTwo(UBLExtensionArray)?.InvoiceCorrection?.TaxTotal;
+
+  content.push(
+    generateInvoiceHeader(invoice, additionalData.nrKSeF), // Nagłówek faktury
+    generateAccountingParty(sellerSupplierParty?.Party, 'Issuer'), // Wystawca faktury
+    generateAccountingParty(invoice.AccountingSupplierParty?.Party, 'Supplier'), // Sprzedawca
+    generateAccountingParty(invoice.AccountingCustomerParty?.Party, 'Customer'), // Nabywca
+    generateTaxRepresentativeParty(invoice), // Przedstawiciel podatkowy sprzedawcy
+    generateDelivery(getTable(invoice.Delivery)), // Odbiorca
+    generatePayeeParty(invoice.PayeeParty), // Odbiorca płatności
+    generateReceiverParty(receiverParty), // Adresat
+    generateInvoiceDescription(PEFType.Corrective, invoice), // Treść faktury
+    generateInvoiceLine(invoice, SectionType.BeforeCorrection), // Pozycje przed korektą
+    generateAllowanceCharge(invoice, SectionType.BeforeCorrection), // Upusty i obciążenia na poziomie dokumentu
+    generateTaxTotal(totalTaxBeforeCorrection, invoice?.DocumentCurrencyCode), // Rozliczenie VAT wg stawek przed korektą
+    generateLegalMonetaryTotal(invoice, SectionType.BeforeCorrection), // Podsumowanie faktury przed korektą
+    generateInvoiceLine(invoice, SectionType.AfterCorrection), // Pozycje po korekcie
+    generateAllowanceCharge(invoice, SectionType.AfterCorrection), // Upusty i obciążenia na poziomie dokumentu
+    generateTaxTotal(invoice.TaxTotal, invoice?.DocumentCurrencyCode), // Rozliczenie VAT wg stawek po korekcie
+    generateAccountReckoning(invoice), //Rozliczenie konta
+    generateLegalMonetaryTotal(invoice, SectionType.AfterCorrection), //Podsumowanie faktury po korekcie
+    generatePayment(invoice), // Instrukcje płatności
+    generateDiffSummary(invoice), // Podsumowanie różnic
+    generateAllowanceCharge(invoice, SectionType.Summary), // Upusty i obciążenia na poziomie dokumentu
+    generateTaxTotal(totalTaxSummary, invoice?.DocumentCurrencyCode), // Rozliczenie VAT wg stawek podsumowanie
+    generateLegalMonetaryTotal(invoice, SectionType.Summary), // Podsumowanie faktury
+    generateFooter(additionalData, invoice!.CustomizationID!) // Elementy struktury
+  );
+  const docDefinition: TDocumentDefinitions = {
+    content: content,
+    footer: (currentPage, pageCount) => {
+      return {
+        text: `${currentPage.toString()} ${i18n.t('invoice.footer.pagesTotal')} ${pageCount}`,
+        alignment: Position.RIGHT,
+        margin: [0, 0, 40, 0],
+      };
+    },
+    ...generateStyle(),
+  };
+
+  return pdfMake.createPdf(docDefinition);
+}

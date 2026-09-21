@@ -1,13 +1,44 @@
 # Changelog
 
+## [1.1.40]
+
+### zaplanowana data wydania [18.09.2026]
+
+- Dodano dodatkową spację w nagłówku po labelce 'Numer KSeF'.
+- Dodano obsługę plików xml w formacie utf-16.
+- Podbito wersję jsdom.
+- Zrefaktoryzowano faktury PEF - będą dostępne produkcyjnie z obecnym wydaniem.
+
+---
+
+## [1.1.39]
+
+### zaplanowana data wydania [04.09.2026]
+
+- Poprawiono opis dotyczący liczby części dokumentu UPO.
+- Wyłączono dubug mode.
+- Dodano generyczny typ dla weryfikacji spójnośći kluczy tłumaczeń.
+- Dodano kod waluty do warunków transakcji.
+- Dodano obsługę faktur PEF (w fazie testów, niedostępne na ten moment produkcyjnie w aplikacji podatnika).
+
+---
+
+## [1.1.36]
+
+- Podbicie wersji pdfmake.
+
+---
+
+## [1.1.31]
+
+- Dodano wyświetlenie wszystkich elementow pozycji faktury w korekcie zbiorczej.
+- Zmodyfikowano widoczność pola P_15, zawsze wizualizowana.
+
+---
+
 ## [1.1.30]
 
-### Added
-
 - Dodano `configureFonts()`. Metoda rejestrująca własną czcionkę.
-
-### Updated
-
 - Ujednolicono separator dzisiętny dla stawki podatku OSS.
 - Poprawiono opis dotyczący pola UU_IDZ.
 - Ujednolicono nazewnictwo kolumn dla oznaczenia procedury.
@@ -20,13 +51,10 @@
 
 ## [1.1.25]
 
-### Added
-
 - Dodano datę nadania numeru KSEF.
-
-### Updated
-
 - Ujednolicono separator dziesiętny dla kwoty podatku akcyzowego.
 - usunięto nadmiarową pustą stronę na końcu wizualizacji faktury.
 - Ujednolicono separator dziesiętny w tabeli zamówienie w kolumnie ilość.
 - Dodano kod waluty w podsumowaniu zamówienia, kwoty zapłaty (zaliczki).
+
+---

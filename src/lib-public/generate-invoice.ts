@@ -5,11 +5,17 @@ import { generateFA2 } from './FA2-generator.js';
 import { generateFA3 } from './FA3-generator.js';
 import { generateFARR } from './FARR-generator.js';
 import { i18nReady } from './i18n/i18n-init.js';
+import { generateBasicPEF } from './PEF-basic-generator.js';
+import { generateCorrectivePEF } from './PEF-corrective-generator.js';
+import { generateSpecPEF } from './PEF-spec-generator.js';
 import { AdditionalDataTypes } from './types/common.types';
 import { Faktura as Faktura1 } from './types/fa1.types';
 import { Faktura as Faktura2 } from './types/fa2.types';
 import { Faktura as Faktura3 } from './types/fa3.types';
 import { FaRR } from './types/FaRR.types';
+import { PEFCorrectiveInvoice } from './types/pef-invoice-corrective.types.js';
+import { PEFSpecInvoice } from './types/pef-invoice-spec.types.js';
+import { PEFBasicInvoice } from './types/pef-invoice.types.js';
 
 export async function generateInvoice(
   file: File,
@@ -29,8 +35,10 @@ export async function generateInvoice(
   const xml: unknown = await parseXML(file);
 
   const wersjaFa: any = (xml as any)?.Faktura?.Naglowek?.KodFormularza?._attributes?.kodSystemowy;
+  const wersjaPef: any =
+    (xml as any)?.Invoice?.ProfileID?._text ?? (xml as any)?.CreditNote?.ProfileID?._text;
 
-  const wersja = wersjaFa;
+  const wersja = wersjaFa ?? wersjaPef;
 
   let pdf: TCreatedPdf;
 
@@ -49,6 +57,15 @@ export async function generateInvoice(
     case 'FA_RR (1)':
     case 'FA_RR(1)':
       pdf = generateFARR((xml as any).Faktura as FaRR, additionalData);
+      break;
+    case 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0':
+      pdf = generateBasicPEF((xml as any).Invoice as PEFBasicInvoice, additionalData);
+      break;
+    case 'urn:fdc:www.efaktura.gov.pl:ver2.0:corr_inv:ver4.0':
+      pdf = generateCorrectivePEF((xml as any).CreditNote as PEFCorrectiveInvoice, additionalData);
+      break;
+    case 'urn:fdc:www.efaktura.gov.pl:ver2.0:plinv:ver1.4':
+      pdf = generateSpecPEF((xml as any).Invoice as PEFSpecInvoice, additionalData);
       break;
     default:
       throw new Error(`Unknown XML Version: ${wersja}`);
